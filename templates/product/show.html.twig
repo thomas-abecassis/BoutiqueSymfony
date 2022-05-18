@@ -1,0 +1,34 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}
+	Boutique -
+	{{ product.name }}
+	!
+{% endblock %}
+
+{% block content %}
+	<div class="row">
+		<div class="col-md-4">
+			<img class="img-fluid" src="/uploads/{{ product.image }}" alt="{{ product.name }}" , class="img-fluid">
+		</div>
+		<div class="col-md-8">
+			<h3>
+				{{ product.name }}
+			</h3>
+			<p>
+				{{ product.subtitle }}
+			</p>
+			<span class="product-page-price">{{ (product.price/100)|number_format(2, '.', ',') }}
+				€</span>
+			<hr>
+			<p>
+				{{product.description}}
+			</p>
+			<hr>
+			<a class="btn btn-primary">
+				Ajouter au panier
+			</a>
+
+		</div>
+	</div>
+{% endblock %}

@@ -1,0 +1,43 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}
+	Boutique - Nos produits !
+{% endblock %}
+
+{% block content %}
+	<div class="row">
+		<div class="col-md-3">
+			<h3>Fitres</h3>
+			{{ form(form) }}
+			</div>
+			<div class="col-md-9">
+				<h3>
+					Nos produits
+				</h3>
+
+				<div class="row">
+					{% for product in products %}
+						<div class="d-flex col-md-4">
+							<div class="product d-flex product-item text-center">
+								<a class="image-custom" href="{{ path('app_product', {'slug' : product.slug} ) }}">
+									<img class="image-custom" src="/uploads/{{ product.image }}" alt="{{ product.name }}" , class="img-fluid">
+								</a>
+								<div class="w-100">
+									<h5 class="product-name">
+										{{product.name}}
+									</h5>
+									<span class="product-subtitle">
+										{{product.subtitle}}
+									</span>
+									<span class="product-price">{{ (product.price/100)|number_format(2, '.', ',') }}
+										€
+									</span>
+								</div>
+							</div>
+						</div>
+					{% endfor %}
+				</div>
+			</div>
+		</div>
+
+	{% endblock %}
