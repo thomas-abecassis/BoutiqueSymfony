@@ -2,6 +2,8 @@
 
 namespace App\Entity;
 
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 use App\Repository\UserRepository;
 use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
@@ -46,6 +48,16 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
      * @ORM\Column(type="string", length=255)
      */
     private $firstname;
+
+    /**
+     * @ORM\OneToMany(targetEntity=Adress::class, mappedBy="client")
+     */
+    private $adresses;
+
+    public function __construct()
+    {
+        $this->adresses = new ArrayCollection();
+    }
 
     public function getId(): ?int
     {
@@ -163,5 +175,40 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
         $this->firstname = $firstname;
 
         return $this;
+    }
+
+    /**
+     * @return Collection<int, Adress>
+     */
+    public function getAdresses(): Collection
+    {
+        return $this->adresses;
+    }
+
+    public function addAdress(Adress $adress): self
+    {
+        if (!$this->adresses->contains($adress)) {
+            $this->adresses[] = $adress;
+            $adress->setClient($this);
+        }
+
+        return $this;
+    }
+
+    public function removeAdress(Adress $adress): self
+    {
+        if ($this->adresses->removeElement($adress)) {
+            // set the owning side to null (unless already changed)
+            if ($adress->getClient() === $this) {
+                $adress->setClient(null);
+            }
+        }
+
+        return $this;
+    }
+
+    public function __toString()
+    {
+        return $this->firstname;
     }
 }

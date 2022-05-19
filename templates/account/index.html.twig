@@ -7,5 +7,11 @@
 	<h1>Bonjour
 		{{app.user.firstname}}</h1>
 
-	<a href="{{ path('app_account_password') }}">Modifier mon mot de passe</a>
+	<a href="{{ path('app_account_password') }}">
+		<span>Modifier mon mot de passe</span>
+	</a>
+	<br>
+	<a href="{{ path('app_account_adress') }}">
+		<span>Gérer mes adresses</span>
+	</a>
 {% endblock %}
