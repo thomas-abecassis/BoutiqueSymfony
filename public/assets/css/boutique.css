@@ -34,3 +34,14 @@
 .product-page-price {
     font-size: 19px;
 }
+
+.product-cart {
+    object-fit: cover;
+    width: 75px;
+    height: 75px;
+}
+
+.cart-price {
+    display: inline-block;
+    font-size: 19px;
+}

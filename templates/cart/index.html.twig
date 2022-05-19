@@ -1,20 +1,79 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}Hello CartController!{% endblock %}
+{% block title %}
+	Boutique - mon panier
+{% endblock %}
 
-{% block body %}
-<style>
-    .example-wrapper { margin: 1em auto; max-width: 800px; width: 95%; font: 18px/1.5 sans-serif; }
-    .example-wrapper code { background: #F5F5F5; padding: 2px 6px; }
-</style>
+{% block content %}
+	<div class="m-5">
+		<h3>Mon panier</h3>
+		{% if  cart|length > 0 %}
 
-<div class="example-wrapper">
-    <h1>Hello {{ controller_name }}! ✅</h1>
+			<table class="table">
+				<thead>
+					<tr>
+						<th scope="col">Produit</th>
+						<th scope="col"></th>
+						<th scope="col">Quantité</th>
+						<th scope="col">Total</th>
+						<th scope="col"></th>
+					</tr>
+				</thead>
+				<tbody>
+					{% set total = null %}
+					{% for product in cart %}
+						<tr>
+							<th scope="row">
+								<img src="/uploads/{{ product.product.image }}" alt="{{ product.product.name }} " class="product-cart">
+							</th>
+							<td>
+								<span>
+									{{ product.product.name }}
+								</span>
+								<br>
+								<small>
+									{{ product.product.subtitle }}
+								</small>
+							</td>
+							<td>
+								<a href="{{ path('decrease_cart', {'id' : product.product.id}) }}">
+									<i class="bi bi-dash"></i>
+								</a>
+								x
+								{{ product.quantity }}
+								<a href="{{ path('add_cart', {'id' : product.product.id}) }}">
+									<i class="bi bi-plus"></i>
+								</a>
+							</td>
 
-    This friendly message is coming from:
-    <ul>
-        <li>Your controller at <code><a href="{{ '/home/typiak/Bureau/Stage/tests/boutique/src/Controller/CartController.php'|file_link(0) }}">src/Controller/CartController.php</a></code></li>
-        <li>Your template at <code><a href="{{ '/home/typiak/Bureau/Stage/tests/boutique/templates/cart/index.html.twig'|file_link(0) }}">templates/cart/index.html.twig</a></code></li>
-    </ul>
-</div>
+							<td>{{ ((product.product.price * product.quantity)/100)|number_format(2, '.', ',') }}
+								€</td>
+							<td>
+								<a href="{{ path('delete_cart', {'id' : product.product.id}) }}">
+									<i class="bi bi-trash-fill text-danger" style="font-size: 1.4rem;"></i>
+								</a>
+							</td>
+						</tr>
+						{% set total = total + (product.product.price * product.quantity) %}
+					{% endfor %}
+				</tbody>
+			</table>
+
+
+			<div class="text-right float-right col-4 mb-4">
+				<span>Total du panier :
+					<div class="cart-price">
+						{{ (total/100)|number_format(2, '.', ',') }}
+						€
+					</div>
+				</span>
+				<a class="mt-2 btn btn-primary btn-block" href="">Valider mon panier</a>
+
+			{% else %}
+				<hr>
+				<h4 class="text-center">Quel dommage, vous n'avez rien dans votre panier !</h4>
+			{% endif %}
+		</div>
+	</div>
+
 {% endblock %}
