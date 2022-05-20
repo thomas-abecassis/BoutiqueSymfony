@@ -3,6 +3,7 @@
 namespace App\Controller;
 
 use Exception;
+use App\Classe\Cart;
 use App\Entity\Adress;
 use App\Form\AdressType;
 use App\Repository\AdressRepository;
@@ -33,9 +34,9 @@ class AccountAdressController extends AbstractController
     }
 
     /**
-     * @Route("/account/adress/add", name="app_account_adress_add")
+     * @Route("/account/adress/add/{cart?}", name="app_account_adress_add")
      */
-    public function addAdress(Request $reqest): Response
+    public function addAdress(Request $reqest, $cart = null): Response
     {
 
         $adress = new Adress();
@@ -47,7 +48,12 @@ class AccountAdressController extends AbstractController
             $adress->setClient($this->getUser());
             $this->doctrine->persist($adress);
             $this->doctrine->flush();
-            return $this->redirectToRoute("app_account_adress");
+
+            // check if addAdress is called via an order placement
+            if ($cart)
+                return $this->redirectToRoute("app_order");
+            else
+                return $this->redirectToRoute("app_account_adress");
         }
 
         return $this->render('account/adress_form.html.twig', [

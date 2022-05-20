@@ -22,11 +22,15 @@ class Cart
 
     /**
      * return associative array[id=>quantity]
+     * if cart is not set, return empty array
      * @return array
      */
     public function get()
     {
-        return $this->session->get('cart');
+        $cart = $this->session->get('cart');
+        if (!$cart)
+            return array();
+        return $cart;
     }
 
     /**

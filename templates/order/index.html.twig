@@ -1,0 +1,28 @@
+{% extends 'base.html.twig' %}
+
+{% block titre %}Boutique - confirmer ma commande
+{% endblock %}
+
+{% block content %}
+	<h3>
+		Je passe ma commande
+	</h3>
+	<p>
+		Veuillez confirmer votre commande
+	</p>
+
+	<div class="row">
+		<div class="col-md-6">
+
+			{% set formhtml %}
+			{{ form(form) }}
+				{% endset %}
+				{{ formhtml|replace({ '[br]' : '<br>'})|raw }}
+			</div>
+			<div class="col-md-6">
+				<b>Récap de commande</b>
+				<br>
+				<b>Valider commande</b>
+			</div>
+		</div>
+	{% endblock %}

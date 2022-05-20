@@ -45,3 +45,10 @@
     display: inline-block;
     font-size: 19px;
 }
+
+.oneline-text {
+    white-space: nowrap;
+    text-overflow: ellipsis;
+    overflow: hidden;
+    display: inherit;
+}

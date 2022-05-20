@@ -68,6 +68,6 @@ class CartController extends AbstractController
     public function remove(Cart $cart)
     {
         $cart->remove();
-        return $this->redirectToRoute('app_produit');
+        return $this->redirectToRoute('app_cart');
     }
 }
