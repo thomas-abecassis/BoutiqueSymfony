@@ -52,3 +52,21 @@
     overflow: hidden;
     display: inherit;
 }
+
+.form-check {
+    padding: 20px;
+    background-color: #f1faff;
+    margin-top: 10px;
+    border-radius: 7px;
+}
+
+.col-form-label {
+    font-weight: bold;
+}
+
+.order-summary {
+    padding: 20px;
+    background-color: #f1faff;
+    margin-top: 10px;
+    border-radius: 7px;
+}

@@ -15,14 +15,32 @@
 		<div class="col-md-6">
 
 			{% set formhtml %}
-			{{ form(form) }}
-				{% endset %}
-				{{ formhtml|replace({ '[br]' : '<br>'})|raw }}
-			</div>
-			<div class="col-md-6">
-				<b>Récap de commande</b>
-				<br>
-				<b>Valider commande</b>
-			</div>
+			{{ form_start(form, {action : path('app_order_recap')}) }}
+			{{ form_end(form) }}
+			{% endset %}
+			{{ formhtml|replace({ '[br]' : '<br>'})|raw }}
 		</div>
-	{% endblock %}
+		<div class="col-md-6">
+			<div class="text-center">
+				<b>Récapitulatif commande</b>
+				<p>Retrouver ici tout les produits de votre commande</p>
+			</div>
+			<div class="order-summary">
+				{% for product in cart %}
+					<div class="mt-2 row">
+						<div class="col-2"><img src="/uploads/{{ product.product.image }}" alt="{{ product.product.name }} " class="product-cart"></div>
+						<div class="col-8 my-auto">{{product.product.name}}
+							<br>
+							<small>{{product.product.subtitle}}</small>
+						</div>
+						<div class="col-2 my-auto">
+							x
+							{{product.quantity}}
+						</div>
+					</div>
+				{% endfor %}
+			</div>
+			<br>
+		</div>
+	</div>
+{% endblock %}

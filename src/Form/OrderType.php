@@ -8,6 +8,7 @@ use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\OptionsResolver\OptionsResolver;
+use Symfony\Component\Form\Extension\Core\Type\SubmitType;
 
 class OrderType extends AbstractType
 {
@@ -29,6 +30,12 @@ class OrderType extends AbstractType
                 "class" => Carrier::class,
                 "multiple" => false,
                 "expanded" => true,
+            ])
+            ->add("submit", SubmitType::class, [
+                "label" => "Valider mon panier",
+                "attr" => [
+                    "class" => "btn btn-primary btn-block"
+                ]
             ]);
     }
 
