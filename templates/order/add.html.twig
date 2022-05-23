@@ -1,0 +1,84 @@
+{% extends 'base.html.twig' %}
+
+{% block titre %}Boutique - confirmer ma commande
+{% endblock %}
+
+{% block content %}
+	{% set total = null %}
+	<h3>
+		Je passe ma commande
+	</h3>
+	<p>
+		Veuillez confirmer votre commande
+	</p>
+
+	<div class="row">
+		<div class="col-md-6">
+			<strong>
+				Mon adresse :
+			</strong>
+			<div class="form-check">{{delivery|raw}}</div>
+
+			<hr>
+			<strong>
+
+				Mon transporteur :
+
+			</strong>
+			<div class="form-check">
+				{{ carrier.name }}
+				<br>
+				{{ carrier.description }}
+				<br>
+				{{ carrier.price|number_format(2, '.', ',')  }}
+				€
+			</div>
+		</div>
+		<div class="col-md-6">
+			<div class="text-center">
+				<b>Ma commande</b>
+			</div>
+			<div class="order-summary">
+				{% for product in cart %}
+					<div class="mt-2 row">
+						<div class="col-2"><img src="/uploads/{{ product.product.image }}" alt="{{ product.product.name }} " class="product-cart"></div>
+						<div class="col-8 my-auto">{{product.product.name}}
+							<br>
+							<small>x
+								{{product.quantity}}</small>
+						</div>
+						<div class="col-2 my-auto">
+							{{ ((product.product.price * product.quantity)/100)|number_format(2, '.', ',') }}
+							€
+						</div>
+					</div>
+					{% set total = total + (product.product.price * product.quantity) %}
+				{% endfor %}
+			</div>
+			<hr>
+			<strong>Sous-total :
+			</strong>
+			{{ ((total)/100)|number_format(2, '.', ',') }}
+			€
+			<br>
+			<strong>Livraison :
+			</strong>
+			{{carrier.price|number_format(2, '.', ',')}}
+			€
+			<hr>
+			<strong>
+				Total :
+			</strong>
+			{{(total/100+carrier.price)|number_format(2, '.', ',')}}
+			€
+
+			<div class="btn btn-primary btn-block">
+				Payer
+				{{(total/100+carrier.price)|number_format(2, '.', ',')}}
+				€
+			</div>
+			<br>
+		</div>
+
+	</div>
+{% endblock %}

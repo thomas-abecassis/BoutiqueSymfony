@@ -34,9 +34,9 @@ class AccountAdressController extends AbstractController
     }
 
     /**
-     * @Route("/account/adress/add/{cart?}", name="app_account_adress_add")
+     * @Route("/account/adress/add/{redirection?}", name="app_account_adress_add")
      */
-    public function addAdress(Request $reqest, $cart = null): Response
+    public function addAdress(Request $reqest, $redirection = null): Response
     {
 
         $adress = new Adress();
@@ -49,8 +49,11 @@ class AccountAdressController extends AbstractController
             $this->doctrine->persist($adress);
             $this->doctrine->flush();
 
+            // check if addAdress is called via an order summary
+            if ($redirection == "panier")
+                return $this->redirectToRoute("app_order");
             // check if addAdress is called via an order placement
-            if ($cart)
+            else if ($redirection == "commande")
                 return $this->redirectToRoute("app_order");
             else
                 return $this->redirectToRoute("app_account_adress");
