@@ -5,6 +5,8 @@ namespace App\Controller;
 use Stripe\Stripe;
 use App\Classe\Cart;
 use Stripe\Checkout\Session;
+use Doctrine\ORM\EntityManagerInterface;
+use Doctrine\Persistence\ManagerRegistry;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\HttpFoundation\JsonResponse;
@@ -14,12 +16,15 @@ use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 class StripeController extends AbstractController
 {
     /**
-     * @Route("/stripe", name="app_stripe")
+     * @Route("/stripe/{reference}", name="app_stripe")
      */
-    public function index(Cart $cart)
+    public function index(EntityManagerInterface $doctrine, $reference)
     {
 
-
+        $order = $doctrine->getRepository(Order::class)->findOneByReference($reference);
+        if (!$order) {
+            return $this->redirectToRoute('app_home');
+        }
         $productsStripe = [];
         foreach ($cart->getFull() as $product) {
             $productStripe = [];

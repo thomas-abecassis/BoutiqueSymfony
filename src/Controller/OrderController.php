@@ -81,6 +81,9 @@ class OrderController extends AbstractController
             $order->setDelivery($delivery_content);
             $order->setIsPaid(0);
 
+            $reference = $date->format('Y-m-d') . '-' . uniqid();
+            $order->setReference($reference);
+
             $this->entityManager->persist($order);
 
             $productsStripe = [];
@@ -119,7 +122,8 @@ class OrderController extends AbstractController
             return $this->render('order/add.html.twig', [
                 "cart" => $cart->getFull(),
                 "carrier" => $carriers,
-                "delivery" => $delivery_content
+                "delivery" => $delivery_content,
+                "reference" => $reference
             ]);
         }
 
