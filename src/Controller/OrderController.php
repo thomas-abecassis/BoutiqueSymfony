@@ -2,6 +2,7 @@
 
 namespace App\Controller;
 
+
 use App\Classe\Cart;
 use App\Entity\User;
 use App\Entity\Order;
@@ -82,7 +83,9 @@ class OrderController extends AbstractController
 
             $this->entityManager->persist($order);
 
+            $productsStripe = [];
             foreach ($cart->getFull() as $product) {
+                $productStripe = [];
                 $orderDetail = new OrderDetail();
                 $orderDetail->setMyOrder($order);
                 $orderDetail->setProduct($product["product"]->getName());
@@ -90,10 +93,28 @@ class OrderController extends AbstractController
                 $orderDetail->setPrice($product["product"]->getPrice());
                 $orderDetail->setTotal($product["product"]->getPrice() * $product["quantity"]);
                 $this->entityManager->persist($orderDetail);
+                $productStripe['price_data'] = [
+                    'currency' => 'eur',
+                    'product_data' => [
+                        'name' => $product["product"]->getName(),
+                    ],
+                    "unit_amount" => $product["product"]->getPrice(),
+                ];
+                $productStripe['quantity'] = $product["quantity"];
+                $productsStripe[] = $productStripe;
             }
 
             $this->entityManager->flush();
 
+            \Stripe\Stripe::setApiKey('sk_test_51L2ZosATxl592yi2egxAMWLgwQEmeFHj7AcY8mKSvldNDjaiuGIWv7SomuDH3vb00eZ4B1TP8D6N5VpxWOVSPX0U00LIacDl9L');
+
+            $YOUR_DOMAIN = 'http://localhost:8000/public';
+            $checkout_session = \Stripe\Checkout\Session::create([
+                'line_items' => $productsStripe,
+                'mode' => 'payment',
+                'success_url' => $YOUR_DOMAIN . '/success.html',
+                'cancel_url' => $YOUR_DOMAIN . '/cancel.html',
+            ]);
 
             return $this->render('order/add.html.twig', [
                 "cart" => $cart->getFull(),

@@ -2,6 +2,10 @@
 
 {% block titre %}Boutique - confirmer ma commande
 {% endblock %}
+{% block javascript %}
+	<script src="https://polyfill.io/v3/polyfill.min.js?version=3.52.1&features=fetch"></script>
+	<script src="https://js.stripe.com/v3/"></script>
+{% endblock %}
 
 {% block content %}
 	{% set total = null %}
@@ -72,11 +76,12 @@
 			{{(total/100+carrier.price)|number_format(2, '.', ',')}}
 			€
 
-			<div class="btn btn-primary btn-block">
-				Payer
-				{{(total/100+carrier.price)|number_format(2, '.', ',')}}
-				€
-			</div>
+			<form action="{{path('app_stripe')}}" method="POST">
+				<button class="btn btn-block btn-primary" type="submit" id="checkout-button">
+					Payer
+					{{(total/100+carrier.price)|number_format(2, '.', ',')}}
+					€</button>
+			</form>
 			<br>
 		</div>
 
