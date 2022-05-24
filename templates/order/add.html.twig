@@ -76,7 +76,7 @@
 			{{(total/100+carrier.price)|number_format(2, '.', ',')}}
 			€
 
-			<form action="{{path('app_stripe')}}" method="POST">
+			<form action="{{path('app_stripe', {'reference' : reference})}}" method="POST">
 				<button class="btn btn-block btn-primary" type="submit" id="checkout-button">
 					Payer
 					{{(total/100+carrier.price)|number_format(2, '.', ',')}}

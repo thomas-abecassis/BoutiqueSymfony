@@ -50,6 +50,7 @@ class OrderController extends AbstractController
 
     /**
      * @Route("/commande/recapitulatif", name="app_order_recap", methods={"POST"})
+     * Ajout d'une commande en base de donnée (non payée)
      */
     public function add(Request $request, Cart $cart): Response
     {
@@ -63,9 +64,15 @@ class OrderController extends AbstractController
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
+
+            //On met en place tout les champs dont on va avoir besoin pour Order et OrderDetail (c'est long)
             $date = new DateTimeImmutable();
+
+            $reference = $date->format('Y-m-d') . '-' . uniqid();
+
             $carriers = $form->get("carriers")->getData();
             $delivery = $form->get("delivery")->getData();
+
             $delivery_content = $delivery->getFirstname() . ' ' . $delivery->getLastname() . " " . $delivery->getPhone();
             if ($delivery->getCompany())
                 $delivery_content .= '<br>' . $delivery->getCompany();
@@ -73,22 +80,21 @@ class OrderController extends AbstractController
             $delivery_content .= '<br>' . $delivery->getPostal() . ' - ' . $delivery->getCity();
             $delivery_content .= '<br>' . $delivery->getCountry();
 
+            //On créer et persist un objet Order (Commande génerale)
             $order = new Order();
+
             $order->setClient($this->getUser());
             $order->setCreatedAt($date);
             $order->setCarrierName($carriers->getName());
             $order->setDeliveryPrice($carriers->getPrice());
             $order->setDelivery($delivery_content);
             $order->setIsPaid(0);
-
-            $reference = $date->format('Y-m-d') . '-' . uniqid();
             $order->setReference($reference);
 
             $this->entityManager->persist($order);
 
-            $productsStripe = [];
+            //On créer et persist des Objects orderDetail (chaque type de produit différent dans une commande)
             foreach ($cart->getFull() as $product) {
-                $productStripe = [];
                 $orderDetail = new OrderDetail();
                 $orderDetail->setMyOrder($order);
                 $orderDetail->setProduct($product["product"]->getName());
@@ -96,28 +102,9 @@ class OrderController extends AbstractController
                 $orderDetail->setPrice($product["product"]->getPrice());
                 $orderDetail->setTotal($product["product"]->getPrice() * $product["quantity"]);
                 $this->entityManager->persist($orderDetail);
-                $productStripe['price_data'] = [
-                    'currency' => 'eur',
-                    'product_data' => [
-                        'name' => $product["product"]->getName(),
-                    ],
-                    "unit_amount" => $product["product"]->getPrice(),
-                ];
-                $productStripe['quantity'] = $product["quantity"];
-                $productsStripe[] = $productStripe;
             }
 
             $this->entityManager->flush();
-
-            \Stripe\Stripe::setApiKey('sk_test_51L2ZosATxl592yi2egxAMWLgwQEmeFHj7AcY8mKSvldNDjaiuGIWv7SomuDH3vb00eZ4B1TP8D6N5VpxWOVSPX0U00LIacDl9L');
-
-            $YOUR_DOMAIN = 'http://localhost:8000/public';
-            $checkout_session = \Stripe\Checkout\Session::create([
-                'line_items' => $productsStripe,
-                'mode' => 'payment',
-                'success_url' => $YOUR_DOMAIN . '/success.html',
-                'cancel_url' => $YOUR_DOMAIN . '/cancel.html',
-            ]);
 
             return $this->render('order/add.html.twig', [
                 "cart" => $cart->getFull(),
