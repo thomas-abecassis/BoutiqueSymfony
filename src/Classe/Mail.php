@@ -30,7 +30,7 @@ class Mail
                     ],
                     'TemplateID' => 3958588,
                     'TemplateLanguage' => true,
-                    'Subject' => "Toast",
+                    'Subject' => $objet,
                     'Variables' => json_decode('{
           "content": "' . $contenu . '"
         }', true)

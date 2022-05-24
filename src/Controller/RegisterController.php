@@ -2,6 +2,7 @@
 
 namespace App\Controller;
 
+use Mail;
 use App\Entity\User;
 use App\Form\RegisterType;
 use Doctrine\Persistence\ManagerRegistry;
@@ -27,20 +28,35 @@ class RegisterController extends AbstractController
     public function index(Request $request, UserPasswordHasherInterface $hasher): Response
     {
 
+        $notification = null;
+
         $user = new User();
         $form = $this->createForm(RegisterType::class, $user);
 
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
-            $user->encodePassword($hasher);
-            $this->entityManager->persist($user);
-            $this->entityManager->flush();
+
+            $userMail = $this->entityManager->getRepository(User::class)->findOneByEmail($user->getEmail());
+
+            //Si l'email n'est pas déjà renseigné pour un compte
+            if (!$userMail) {
+                $user->encodePassword($hasher);
+                $this->entityManager->persist($user);
+                $this->entityManager->flush();
+                $notification = "Inscription complète";
+
+                $mail = new Mail();
+                $mail->send($user->getEmail(), "Inscription complète", "Bienvenue");
+            } else {
+                $notification = "Adresse e-mail déjà renseignée pour un client";
+            }
         }
 
         return $this->render('register/index.html.twig', [
             'controller_name' => 'RegisterController',
             'form' => $form->createView(),
+            "notification" => $notification
         ]);
     }
 }
