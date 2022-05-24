@@ -53,7 +53,7 @@ class StripeController extends AbstractController
                 'product_data' => [
                     'name' => $order->getCarrierName(),
                 ],
-                "unit_amount" => $order->getDeliveryPrice() * 100,
+                "unit_amount" => $order->getDeliveryPrice(),
             ],
             "quantity" => 1
         ];
@@ -70,8 +70,8 @@ class StripeController extends AbstractController
             "customer_email" => $this->getUser()->getEmail(),
             'line_items' => $productsStripe,
             'mode' => 'payment',
-            'success_url' => $YOUR_DOMAIN . 'commande/merci/{CHECKOUT_SESSION_ID}',
-            'cancel_url' => $YOUR_DOMAIN . 'commande/erreur/{CHECKOUT_SESSION_ID}',
+            'success_url' => $YOUR_DOMAIN . '/commande/merci/{CHECKOUT_SESSION_ID}',
+            'cancel_url' => $YOUR_DOMAIN . '/commande/erreur/{CHECKOUT_SESSION_ID}',
         ]);
 
 
@@ -79,6 +79,10 @@ class StripeController extends AbstractController
         $response->headers->set('Content-Type', 'application/json');
         $response->headers->set('Location', $checkout_session->url);
         $response->setStatusCode(303);
+
+        $order->setStripeSessionId($checkout_session->id);
+
+        $doctrine->flush();
 
         return $response;
     }

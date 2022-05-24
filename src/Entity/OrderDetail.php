@@ -107,4 +107,9 @@ class OrderDetail
 
         return $this;
     }
+
+    public function __toString(): string
+    {
+        return $this->getProduct() . ' x' . $this->getQuantity() . ', ' . $this->getTotal() / 100 . "€";
+    }
 }

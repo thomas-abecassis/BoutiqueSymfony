@@ -1,0 +1,23 @@
+{% extends 'base.html.twig' %}
+
+{% block titre %}Boutique - Erreur de paiement
+{% endblock %}
+
+{% block content %}
+	<h1>Oups erreur de paiement</h1>
+	<br>
+	<p>
+		Bonjour
+		{{order.client.firstname}}
+		<br>
+		<br>
+		Il semblerait qu'il y ait un soucis de paiment pour ta commande n°
+		<strong>{{order.reference}}</strong>
+	</p>
+	<p>
+		Nous vous invitons à
+		<a href="{{path('app_order')}}">réessayer</a>
+	</p>
+
+
+{% endblock %}

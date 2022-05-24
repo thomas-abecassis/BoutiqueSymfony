@@ -75,6 +75,6 @@ class Carrier
 
     public function __toString(): string
     {
-        return number_format($this->price, 2, '.', ',') . "€  - " . $this->name . "[br]" . $this->description;
+        return number_format($this->price / 100, 2, '.', ',') . "€  - " . $this->name . "[br]" . $this->description;
     }
 }

@@ -1,0 +1,41 @@
+{% extends 'base.html.twig' %}
+
+{% block titre %}Boutique - Mes commandes
+{% endblock %}
+
+{% block content %}
+	<h3>Mes commandes</h3>
+	<span>Gérez vos commandes ici.</span>
+	<br>
+	<span>Retour à votre
+		<a href="{{path('app_account')}}">compte</a>.</span>
+	<hr>
+	<div class="order-container">
+		<table class="table">
+			<thead>
+				<tr>
+					<th scope="col">Réference</th>
+					<th scope="col">Passée le</th>
+					<th scope="col">Produit(s)</th>
+					<th scope="col">Total</th>
+					<th scope="col"></th>
+				</tr>
+			</thead>
+			<tbody>
+				{% for order in orders %}
+					<tr>
+						<th scope="row">
+							<span class="badge badge-secondary">{{order.reference}}</span>
+						</th>
+						<td>{{order.createdAt|date('d/m/Y')}}</td>
+						<td>{{order.orderDetails|length}}</td>
+						<td>{{((order.getTotal/100 + order.deliveryPrice/100))|number_format(2, '.', ',')}}</td>
+						<td>
+							<a href="{{path('app_account_order',{'reference' : order.reference} )}}">Voir ma commande</a>
+						</td>
+					</tr>
+				{% endfor %}
+			</tbody>
+		</table>
+	</div>
+{% endblock %}
