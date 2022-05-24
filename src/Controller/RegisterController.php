@@ -47,7 +47,7 @@ class RegisterController extends AbstractController
                 $notification = "Inscription complète";
 
                 $mail = new Mail();
-                $mail->send($user->getEmail(), "Inscription complète", "Bienvenue");
+                $mail->send($user->getEmail(), "Inscription complète", "Bienvenue sur la boutique " . $user->getFirstName());
             } else {
                 $notification = "Adresse e-mail déjà renseignée pour un client";
             }
