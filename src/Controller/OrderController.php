@@ -90,6 +90,8 @@ class OrderController extends AbstractController
             $order->setDelivery($delivery_content);
             $order->setIsPaid(0);
             $order->setReference($reference);
+            //On hardcode un numéro de suivi pour les tests
+            $order->setShippingNumber("CB662173705US");
 
             $this->entityManager->persist($order);
 

@@ -2,7 +2,7 @@
 
 namespace App\Controller;
 
-use Mail;
+use app\Classe\Mail;
 use App\Classe\Cart;
 use App\Entity\Order;
 use Doctrine\ORM\EntityManagerInterface;

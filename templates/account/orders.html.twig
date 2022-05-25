@@ -16,26 +16,39 @@
 				<tr>
 					<th scope="col">Réference</th>
 					<th scope="col">Passée le</th>
+					<th scope="col">Etat de livraison</th>
 					<th scope="col">Produit(s)</th>
 					<th scope="col">Total</th>
 					<th scope="col"></th>
 				</tr>
 			</thead>
 			<tbody>
+				{% set i = 0 %}
 				{% for order in orders %}
 					<tr>
 						<th scope="row">
 							<span class="badge badge-secondary">{{order.reference}}</span>
 						</th>
 						<td>{{order.createdAt|date('d/m/Y')}}</td>
+						<td>
+							{% if shippings[i] == 0%}
+								En attente d'expédition
+							{% elseif shippings[i] == 1 %}
+								En livraison
+							{% else %}
+								Livré
+							{% endif %}
+						</td>
+						<td></td>
 						<td>{{order.orderDetails|length}}</td>
 						<td>{{((order.getTotal/100 + order.deliveryPrice/100))|number_format(2, '.', ',')}}</td>
 						<td>
 							<a href="{{path('app_account_order',{'reference' : order.reference} )}}">Voir ma commande</a>
 						</td>
 					</tr>
+					{% set i = i + 1 %}
 				{% endfor %}
 			</tbody>
-		</table>
-	</div>
-{% endblock %}
+		</tr>
+	</tbody>
+</tbody></table></div>{% endblock %}

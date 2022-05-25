@@ -2,10 +2,10 @@
 
 namespace App\Controller;
 
-use Mail;
-use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use App\Classe\Suivi;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
+use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 
 class HomeController extends AbstractController
 {

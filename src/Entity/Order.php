@@ -66,6 +66,11 @@ class Order
      */
     private $stripeSessionId;
 
+    /**
+     * @ORM\Column(type="string", length=255, nullable=true)
+     */
+    private $shippingNumber;
+
     public function __construct()
     {
         $this->orderDetails = new ArrayCollection();
@@ -207,6 +212,18 @@ class Order
     public function setStripeSessionId(?string $stripeSessionId): self
     {
         $this->stripeSessionId = $stripeSessionId;
+
+        return $this;
+    }
+
+    public function getShippingNumber(): ?string
+    {
+        return $this->shippingNumber;
+    }
+
+    public function setShippingNumber(?string $shippingNumber): self
+    {
+        $this->shippingNumber = $shippingNumber;
 
         return $this;
     }

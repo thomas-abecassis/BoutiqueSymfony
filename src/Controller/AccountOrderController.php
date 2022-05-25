@@ -2,6 +2,7 @@
 
 namespace App\Controller;
 
+use App\Classe\Suivi;
 use App\Entity\Order;
 use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\Persistence\ManagerRegistry;
@@ -26,8 +27,14 @@ class AccountOrderController extends AbstractController
     public function commandes(): Response
     {
         $orders = $this->doctrine->getRepository(Order::class)->findAllPaidsOrders($this->getUser());
+        $shippings = [];
+        foreach ($orders as $order) {
+            $suivi = new Suivi($order->getShippingNumber());
+            $shippings[] = $suivi->getEtatCode();
+        }
         return $this->render('account/orders.html.twig', [
-            "orders" => $orders
+            "orders" => $orders,
+            "shippings" => $shippings
         ]);
     }
 
@@ -37,9 +44,14 @@ class AccountOrderController extends AbstractController
     public function commande($reference): Response
     {
         $order = $this->doctrine->getRepository(Order::class)->findOneByReference($reference);
+        $suivi = new Suivi($order->getShippingNumber());
+        $lastEvent = $suivi->getLastEvent();
+        $shippingCode = $suivi->getEtatCode();
 
         return $this->render('account/order.html.twig', [
-            "order" => $order
+            "order" => $order,
+            "lastEvent" => $lastEvent,
+            "shippingCode" => $shippingCode
         ]);
     }
 }

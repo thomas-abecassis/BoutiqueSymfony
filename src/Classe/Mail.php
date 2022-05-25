@@ -1,5 +1,7 @@
 <?php
 
+namespace App\Classe;
+
 use Mailjet\Client;
 use Mailjet\Resources;
 

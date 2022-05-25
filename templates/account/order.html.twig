@@ -68,6 +68,21 @@
 		{{(order.total/100 +order.deliveryPrice/100)|number_format(2, '.', ',')}}
 		€<br>
 	</div>
+	<hr>
+	<p>
+		<strong>Suivi de la commande :</strong>
+		votre commande est
+		{% if shippingCode == 0%}
+			en attente d'expédition
+		{% elseif shippingCode == 1 %}
+			en livraison
+		{% else %}
+			livrée
+		{% endif %}
+		!
+		<br>
+		{{lastEvent.label}}
+	</p>
 
 
 {% endblock %}
