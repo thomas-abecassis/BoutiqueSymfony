@@ -1,3 +1,15 @@
 #index:
 #    path: /
 #    controller: App\Controller\DefaultController::index
+blog_keycaps:
+    path:          /blog/keycaps
+    controller:    Symfony\Bundle\FrameworkBundle\Controller\TemplateController
+    defaults:
+        # the path of the template to render
+        template:  'articles/keycaps.html.twig'
+blog_mechanical_keyboards:
+    path:          /blog/mechanical-keyboards
+    controller:    Symfony\Bundle\FrameworkBundle\Controller\TemplateController
+    defaults:
+        # the path of the template to render
+        template:  'articles/mechanicalKeyboard.html.twig'
